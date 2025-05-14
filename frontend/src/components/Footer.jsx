@@ -45,7 +45,7 @@ function Footer() {
         © {new Date().getFullYear()} YourBrand. All rights reserved.
       </div>
     </footer>
-  );
+  );``
 }
 
 export default Footer;

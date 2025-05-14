@@ -7,6 +7,7 @@ import AdminDashboard from "./components/AdminDashboard";
 import AdminProduct from "./components/AdminProduct";
 import AdminOrders from "./components/AdminOrders";
 import Home from "./components/Home";
+import CardList from "./components/CardList";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <BrowserRouter>
       <Navbar/>      
       <Routes>
+        <Route path="/temp" element={<CardList/>}></Route>
         <Route path="/home" element={<Home/>}></Route>
         <Route path="/products" element={<Products />}></Route>
         <Route path="/admin-products" element={<AdminProduct />}></Route>

@@ -54,9 +54,9 @@ const reviewSchema = new mongoose.Schema({
   createdAt: { type: Date },
 });
 
-const User = mongoose.model("User", userSchema);
-const Product = mongoose.model("Product", productSchema);
-const Order = mongoose.model("Order", orderSchema);
-const Cart = mongoose.model("Cart", cartSchema);
+const userModel = mongoose.model("User", userSchema);
+const productModel = mongoose.model("Product", productSchema);
+const orderModel = mongoose.model("Order", orderSchema);
+const cartModel = mongoose.model("Cart", cartSchema);
 
-module.exports = { User, Product, Order, Cart };
+module.exports = { userModel, productModel, orderModel, cartModel };
