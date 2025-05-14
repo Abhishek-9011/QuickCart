@@ -2,11 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const app = express();
+const { userRouter } = require("./routes/user");
 app.use(express.json());
 console.log(process.env.MONGO_URL);
 
-async function main() {
-  await mongoose.connect(process.env.MONGO_URL);
-  app.listen(3000);
-}
+app.use("/user", userRouter);
+
+
 main();
