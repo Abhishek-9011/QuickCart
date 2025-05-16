@@ -23,4 +23,4 @@ router.put('/:id', updateProduct);
 // Delete product
 router.delete('/:id', deleteProduct);
 
-module.exports = router;
+export default router;

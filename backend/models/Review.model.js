@@ -7,4 +7,4 @@ const reviewSchema = new mongoose.Schema({
   comment: String,
 }, { timestamps: true });
 
-module.exports = mongoose.model('Review', reviewSchema);
+export const Review = mongoose.model('Review', reviewSchema);

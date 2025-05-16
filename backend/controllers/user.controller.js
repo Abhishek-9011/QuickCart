@@ -1,4 +1,4 @@
-import User from '../models/User.js';
+import User from '../models/User.model.js'
 export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select('-passwordHash');

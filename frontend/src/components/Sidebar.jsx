@@ -67,7 +67,7 @@ function Sidebar() {
         </ul>
       </nav>
       
-      {!collapsed && (
+      {/* {!collapsed && (
         <div className="absolute bottom-0 w-full p-4 border-t border-gray-700">
           <div className="flex items-center">
             <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
@@ -79,7 +79,7 @@ function Sidebar() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

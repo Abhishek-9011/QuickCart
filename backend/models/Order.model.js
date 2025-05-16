@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema({
     street: String,
     city: String,
     state: String,
-    postalCodte: String,
+    postalCode: String,
     country: String,
     phoneNumber: String
   },
@@ -23,4 +23,4 @@ const orderSchema = new mongoose.Schema({
   totalPrice: { type: Number, required: true },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Order', orderSchema);
+export const Order = mongoose.model('Order', orderSchema);

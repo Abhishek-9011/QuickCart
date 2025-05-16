@@ -23,4 +23,4 @@ router.delete('/remove', removeItemFromCart);
 // DELETE /api/cart/clear/:userId - Clear entire cart
 router.delete('/clear/:userId', clearCart);
 
-module.exports = router;
+export default router;

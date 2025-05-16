@@ -1,10 +1,8 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
-const { userModel } = require("../db");
-const userRouter = express.Router();
+const router = express.Router();
 
-userRouter.post("/signup");
+router.post("/signup");
 
-userRouter.post("/signin");
+router.post("/signin");
 
-module.exports = { userRouter };
+export default router;

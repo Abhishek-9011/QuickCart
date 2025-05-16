@@ -1,7 +1,7 @@
 import Product from '../models/productModel';
 
 // Create Product
-exports.createProduct = async (req, res) => {
+export const createProduct = async (req, res) => {
   try {
     const {
       title,
@@ -40,7 +40,7 @@ exports.createProduct = async (req, res) => {
 };
 
 // Get All Products
-exports.getAllProducts = async (req, res) => {
+export const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find().populate('categoryId');
     res.status(200).json(products);
@@ -50,7 +50,7 @@ exports.getAllProducts = async (req, res) => {
 };
 
 // Get Product by ID
-exports.getProductById = async (req, res) => {
+export const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate('categoryId');
     if (!product) return res.status(404).json({ message: 'Product not found' });
@@ -61,7 +61,7 @@ exports.getProductById = async (req, res) => {
 };
 
 // Update Product
-exports.updateProduct = async (req, res) => {
+export const updateProduct = async (req, res) => {
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
@@ -76,7 +76,7 @@ exports.updateProduct = async (req, res) => {
 };
 
 // Delete Product
-exports.deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res) => {
   try {
     const deletedProduct = await Product.findByIdAndDelete(req.params.id);
     if (!deletedProduct) return res.status(404).json({ message: 'Product not found' });

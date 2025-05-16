@@ -2,7 +2,7 @@ import Cart from '../models/cartModel';
 import Product  from '../models/productModel';
 
 // Add item to cart or update quantity
-exports.addToCart = async (req, res) => {
+export const addToCart = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
 
@@ -45,7 +45,7 @@ exports.addToCart = async (req, res) => {
 };
 
 // Get cart by user ID
-exports.getCartByUserId = async (req, res) => {
+export const getCartByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
     const cart = await Cart.findOne({ userId }).populate('items.productId');
@@ -58,7 +58,7 @@ exports.getCartByUserId = async (req, res) => {
 };
 
 // Update item quantity
-exports.updateCartItem = async (req, res) => {
+export const updateCartItem = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
 
@@ -79,7 +79,7 @@ exports.updateCartItem = async (req, res) => {
 };
 
 // Remove item from cart
-exports.removeItemFromCart = async (req, res) => {
+export const removeItemFromCart = async (req, res) => {
   try {
     const { userId, productId } = req.body;
 
@@ -97,7 +97,7 @@ exports.removeItemFromCart = async (req, res) => {
 };
 
 // Clear cart
-exports.clearCart = async (req, res) => {
+export const clearCart = async (req, res) => {
   try {
     const { userId } = req.params;
 
