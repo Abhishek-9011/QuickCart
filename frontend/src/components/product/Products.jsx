@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ProductCard from "./ProductCard";
-import Filter from "./Filter";
+import ProductCard from "../ProductCard";
+import Filter from "../Filter";
 import { ChevronDown } from "lucide-react";
 
 function Products() {

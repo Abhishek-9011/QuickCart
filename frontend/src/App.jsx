@@ -1,13 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Products from "./components/Products";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import Filter from "./components/Filter";
 import AdminDashboard from "./components/seller/AdminDashboard";
 import AdminProduct from "./components/seller/AdminProduct";
 import AdminOrders from "./components/seller/AdminOrders";
-import CardList from "./components/CardList";
 import LandingPage from "./pages/LandingPage";
+import Profile from "./components/user/Profile";
+import Products from "./components/product/Products";
 
 function App() {
   return (
@@ -15,8 +15,8 @@ function App() {
       <BrowserRouter>
       <Navbar/>      
       <Routes>
-        <Route path="/temp" element={<CardList/>}></Route>
         <Route path="/" element={<LandingPage/>}></Route>
+        <Route path="/user-profile" element={<Profile/>}></Route>
         <Route path="/products" element={<Products />}></Route>
         <Route path="/admin-products" element={<AdminProduct />}></Route>
         <Route path="/admin-dashboard" element={<AdminDashboard/>}></Route>
