@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   ShoppingBag,
   Search,
@@ -7,17 +7,16 @@ import {
   Menu,
   X,
   ChevronRight,
-  ChevronDown,
   LogOut,
   Settings,
-  CreditCard,
-  HelpCircle,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchInputRef = useRef(null);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -27,10 +26,36 @@ function Navbar() {
     setProfileDropdownOpen(!profileDropdownOpen);
   };
 
+  const toggleSearch = () => {
+    setSearchOpen(!searchOpen);
+  };
+
+  // Focus the search input when the search bar opens
+  useEffect(() => {
+    if (searchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchOpen]);
+
+  // Close search when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchOpen && searchInputRef.current && !searchInputRef.current.contains(event.target) && 
+          !event.target.closest('button[data-search-toggle]')) {
+        setSearchOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [searchOpen]);
+
   return (
     <>
       {/* Main Navbar */}
-      <nav className="bg-white shadow-lg sticky top-0 z-50">
+      <nav className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Left Side - Logo */}
@@ -49,31 +74,31 @@ function Navbar() {
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-6">
                 <Link
-                  to={"/"}
+                  to="/"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   Home
                 </Link>
                 <Link
-                  to={"/products"}
+                  to="/products"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   Products
                 </Link>
                 <Link
-                  to={"/"}
+                  to="/"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   Categories
                 </Link>
                 <Link
-                  to={"/"}
+                  to="/"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   About Us
                 </Link>
                 <Link
-                  to={"/"}
+                  to="/"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   Contact Us
@@ -83,19 +108,22 @@ function Navbar() {
 
             {/* Right Side - Icons */}
             <div className="flex items-center space-x-4">
-              <button className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200">
+              <button 
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200"
+                onClick={toggleSearch}
+                data-search-toggle
+              >
                 <Search size={20} />
               </button>
 
               {/* Profile Dropdown */}
               <div className="relative hidden sm:block">
-                <button
-                  className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 flex items-center"
+                <div
+                  className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 flex items-center cursor-pointer"
                   onClick={toggleProfileDropdown}
                 >
                   <User size={20} />
-                
-                </button>
+                </div>
 
                 {profileDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg overflow-hidden z-50 border border-gray-200">
@@ -128,16 +156,16 @@ function Navbar() {
                 )}
               </div>
 
-              <button className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 hidden sm:block">
+              <Link to="/wishlist" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 hidden sm:block">
                 <Heart size={20} />
-              </button>
+              </Link>
 
-              <button className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 relative">
+              <Link to="/cart" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 relative">
                 <ShoppingBag size={20} />
                 <span className="absolute -top-1 -right-1 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
                   3
                 </span>
-              </button>
+              </Link>
 
               {/* Mobile Menu Button */}
               <button
@@ -146,6 +174,25 @@ function Navbar() {
               >
                 <Menu size={24} />
               </button>
+            </div>
+          </div>
+
+          {/* Search Bar - Expandable */}
+          <div 
+            className={`overflow-hidden transition-all duration-300 ${
+              searchOpen ? "max-h-16 opacity-100 mb-4" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="relative mt-1">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search size={18} className="text-gray-400" />
+              </div>
+              <input
+                ref={searchInputRef}
+                type="text"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-black sm:text-sm"
+                placeholder="Search for products..."
+              />
             </div>
           </div>
         </div>
@@ -177,6 +224,20 @@ function Navbar() {
 
           {/* Sidebar Content */}
           <div className="py-4">
+            {/* Search in Mobile Sidebar */}
+            <div className="px-4 mb-4">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search size={18} className="text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-black sm:text-sm"
+                  placeholder="Search for products..."
+                />
+              </div>
+            </div>
+
             <div className="px-4 py-2 space-y-1">
               <Link
                 to="/"

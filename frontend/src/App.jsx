@@ -8,24 +8,42 @@ import AdminOrders from "./components/seller/AdminOrders";
 import LandingPage from "./pages/LandingPage";
 import Profile from "./components/user/Profile";
 import Products from "./components/product/Products";
+import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import WishlistPage from "./pages/WishListPage";
+import InvoicePage from "./pages/InvoicePage";
+import SignIn from "./pages/auth/SignIn";
+import SignUp from "./pages/auth/SignUp";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-      <Navbar/>      
+    <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage/>}></Route>
-        <Route path="/user-profile" element={<Profile/>}></Route>
-        <Route path="/products" element={<Products />}></Route>
-        <Route path="/admin-products" element={<AdminProduct />}></Route>
-        <Route path="/admin-dashboard" element={<AdminDashboard/>}></Route>
-        <Route path="/admin-orders" element={<AdminOrders/>}></Route>
-      </Routes>
-      <Footer/>
-      </BrowserRouter>
-    </>
+        {/* Routes with Navbar and Footer */}
+        <Route path="/*" element={
+          <>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/invoice" element={<InvoicePage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/wishlist" element={<WishlistPage />} />
+              <Route path="/user-profile" element={<Profile />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/admin-products" element={<AdminProduct />} />
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/admin-orders" element={<AdminOrders />} />
+            </Routes>
+            <Footer />
+          </>
+        } />
 
+        {/* Auth routes without Navbar and Footer */}
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
