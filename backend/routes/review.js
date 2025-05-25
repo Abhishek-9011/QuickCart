@@ -5,7 +5,7 @@ import {
   getReviewById,
   updateReview,
   deleteReview
-} from '../controllers/reviewController.js';
+} from '../controllers/review.controller.js';
 
 const router = express.Router();
 

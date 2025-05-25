@@ -1,12 +1,12 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const {
+import {
   addToCart,
   getCartByUserId,
   updateCartItem,
   removeItemFromCart,
   clearCart
-} = require('../controllers/cartController');
+} from '../controllers/cart.controller.js';
 
 // POST /api/cart - Add item or create cart
 router.post('/', addToCart);

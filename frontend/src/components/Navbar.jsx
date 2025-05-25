@@ -9,14 +9,24 @@ import {
   ChevronRight,
   LogOut,
   Settings,
+  LogIn,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const searchInputRef = useRef(null);
+  const profileDropdownRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Check for token in localStorage on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    setIsLoggedIn(!!token);
+  }, []);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -30,6 +40,13 @@ function Navbar() {
     setSearchOpen(!searchOpen);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    setIsLoggedIn(false);
+    setProfileDropdownOpen(false);
+    navigate('/');
+  };
+
   // Focus the search input when the search bar opens
   useEffect(() => {
     if (searchOpen && searchInputRef.current) {
@@ -40,17 +57,30 @@ function Navbar() {
   // Close search when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (searchOpen && searchInputRef.current && !searchInputRef.current.contains(event.target) && 
-          !event.target.closest('button[data-search-toggle]')) {
+      if (
+        searchOpen &&
+        searchInputRef.current &&
+        !searchInputRef.current.contains(event.target) &&
+        !event.target.closest("button[data-search-toggle]")
+      ) {
         setSearchOpen(false);
+      }
+
+      if (
+        profileDropdownOpen &&
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target) &&
+        !event.target.closest("div[data-profile-toggle]")
+      ) {
+        setProfileDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [searchOpen]);
+  }, [searchOpen, profileDropdownOpen]);
 
   return (
     <>
@@ -60,14 +90,16 @@ function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Left Side - Logo */}
             <div className="flex items-center gap-2">
-              <img
-                className="h-10 w-auto"
-                src="/api/placeholder/40/40"
-                alt="logo"
-              />
-              <span className="text-xl font-bold text-gray-800 hidden sm:block">
-                BrandName
-              </span>
+              <Link to="/" className="flex items-center gap-2">
+                <img
+                  className="h-10 w-auto"
+                  src="/logo.png" // Replace with your actual logo path
+                  alt="logo"
+                />
+                <span className="text-xl font-bold text-gray-800 hidden sm:block">
+                  BrandName
+                </span>
+              </Link>
             </div>
 
             {/* Center - Navigation Links (Hidden on Mobile) */}
@@ -86,19 +118,19 @@ function Navbar() {
                   Products
                 </Link>
                 <Link
-                  to="/"
+                  to="/categories"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   Categories
                 </Link>
                 <Link
-                  to="/"
+                  to="/about"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   About Us
                 </Link>
                 <Link
-                  to="/"
+                  to="/contact"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   Contact Us
@@ -108,77 +140,113 @@ function Navbar() {
 
             {/* Right Side - Icons */}
             <div className="flex items-center space-x-4">
-              <button 
+              <button
                 className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200"
                 onClick={toggleSearch}
                 data-search-toggle
+                aria-label="Search"
               >
                 <Search size={20} />
               </button>
 
-              {/* Profile Dropdown */}
-              <div className="relative hidden sm:block">
-                <div
-                  className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 flex items-center cursor-pointer"
-                  onClick={toggleProfileDropdown}
-                >
-                  <User size={20} />
-                </div>
+              {/* Conditional rendering based on login status */}
+              {isLoggedIn ? (
+                <>
+                  {/* Only show these buttons when logged in */}
+                  <Link
+                    to="/wishlist"
+                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 hidden sm:block"
+                    aria-label="Wishlist"
+                  >
+                    <Heart size={20} />
+                  </Link>
 
-                {profileDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg overflow-hidden z-50 border border-gray-200">
-                    <div className="py-1">
-                      <div className="px-4 py-2 border-b border-gray-100">
-                        <p className="text-sm font-medium text-gray-800">
-                          Signed in as
-                        </p>
-                        <p className="text-sm text-gray-500 truncate">
-                          user@example.com
-                        </p>
-                      </div>
-
-                      <Link
-                        to="/user-profile"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        <User size={16} className="mr-3" />
-                        Your Profile
-                      </Link>
-                      <Link
-                        to="/logout"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        <LogOut size={16} className="mr-3" />
-                        Sign out
-                      </Link>
+                  <Link
+                    to="/cart"
+                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 relative"
+                    aria-label="Cart"
+                  >
+                    <ShoppingBag size={20} />
+                    <span className="absolute -top-1 -right-1 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                      3
+                    </span>
+                  </Link>
+                  
+                  {/* Profile Dropdown - Only when logged in */}
+                  <div className="relative hidden sm:block" ref={profileDropdownRef}>
+                    <div
+                      className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 flex items-center cursor-pointer"
+                      onClick={toggleProfileDropdown}
+                      data-profile-toggle
+                      aria-label="User profile"
+                    >
+                      <User size={20} />
                     </div>
+
+                    {profileDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg overflow-hidden z-50 border border-gray-200">
+                        <div className="py-1">
+                          <div className="px-4 py-2 border-b border-gray-100">
+                            <p className="text-sm font-medium text-gray-800">
+                              Signed in as
+                            </p>
+                            <p className="text-sm text-gray-500 truncate">
+                              user@example.com
+                            </p>
+                          </div>
+
+                          <Link
+                            to="/profile"
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setProfileDropdownOpen(false)}
+                          >
+                            <User size={16} className="mr-3" />
+                            Your Profile
+                          </Link>
+                          <Link
+                            to="/settings"
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setProfileDropdownOpen(false)}
+                          >
+                            <Settings size={16} className="mr-3" />
+                            Settings
+                          </Link>
+                          <button
+                            onClick={handleLogout}
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                          >
+                            <LogOut size={16} className="mr-3" />
+                            Sign out
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-
-              <Link to="/wishlist" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 hidden sm:block">
-                <Heart size={20} />
-              </Link>
-
-              <Link to="/cart" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 relative">
-                <ShoppingBag size={20} />
-                <span className="absolute -top-1 -right-1 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
-                  3
-                </span>
-              </Link>
+                </>
+              ) : (
+                /* Show login button when not logged in */
+                <Link 
+                  to="/signin"
+                  className="bg-black text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-800 transition-colors duration-200 hidden sm:flex items-center"
+                >
+                  <LogIn size={16} className="mr-2" />
+                  Login
+                </Link>
+              )}
 
               {/* Mobile Menu Button */}
               <button
                 className="md:hidden text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200"
                 onClick={toggleSidebar}
+                aria-label="Menu"
               >
-                <Menu size={24} />
+                {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
             </div>
           </div>
 
           {/* Search Bar - Expandable */}
-          <div 
+          <div
             className={`overflow-hidden transition-all duration-300 ${
               searchOpen ? "max-h-16 opacity-100 mb-4" : "max-h-0 opacity-0"
             }`}
@@ -217,6 +285,7 @@ function Navbar() {
             <button
               className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200"
               onClick={toggleSidebar}
+              aria-label="Close menu"
             >
               <X size={24} />
             </button>
@@ -242,6 +311,7 @@ function Navbar() {
               <Link
                 to="/"
                 className="flex items-center justify-between text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium"
+                onClick={toggleSidebar}
               >
                 Home
                 <ChevronRight size={18} />
@@ -249,6 +319,7 @@ function Navbar() {
               <Link
                 to="/products"
                 className="flex items-center justify-between text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium"
+                onClick={toggleSidebar}
               >
                 Products
                 <ChevronRight size={18} />
@@ -256,62 +327,92 @@ function Navbar() {
               <Link
                 to="/categories"
                 className="flex items-center justify-between text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium"
+                onClick={toggleSidebar}
               >
                 Categories
                 <ChevronRight size={18} />
               </Link>
               <Link
-                to="/collections"
+                to="/about"
                 className="flex items-center justify-between text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium"
+                onClick={toggleSidebar}
               >
-                Collections
+                About Us
                 <ChevronRight size={18} />
               </Link>
               <Link
                 to="/contact"
                 className="flex items-center justify-between text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium"
+                onClick={toggleSidebar}
               >
                 Contact Us
                 <ChevronRight size={18} />
               </Link>
             </div>
 
-            {/* Account Icons on Mobile */}
+            {/* Account section - conditional based on login status */}
             <div className="mt-4 border-t border-gray-200 pt-4">
               <div className="px-4 py-2">
-                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Your Account
-                </h3>
-                <div className="mt-3 space-y-1">
+                {isLoggedIn ? (
+                  <>
+                    <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Your Account
+                    </h3>
+                    <div className="mt-3 space-y-1">
+                      <Link
+                        to="/profile"
+                        className="flex items-center text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium w-full"
+                        onClick={toggleSidebar}
+                      >
+                        <User size={18} className="mr-3" />
+                        Profile
+                      </Link>
+                      <Link
+                        to="/wishlist"
+                        className="flex items-center text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium w-full"
+                        onClick={toggleSidebar}
+                      >
+                        <Heart size={18} className="mr-3" />
+                        Wishlist
+                      </Link>
+                      <Link
+                        to="/cart"
+                        className="flex items-center text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium w-full"
+                        onClick={toggleSidebar}
+                      >
+                        <ShoppingBag size={18} className="mr-3" />
+                        Cart
+                      </Link>
+                      <Link
+                        to="/settings"
+                        className="flex items-center text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium w-full"
+                        onClick={toggleSidebar}
+                      >
+                        <Settings size={18} className="mr-3" />
+                        Settings
+                      </Link>
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          toggleSidebar();
+                        }}
+                        className="flex items-center text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium w-full"
+                      >
+                        <LogOut size={18} className="mr-3" />
+                        Sign out
+                      </button>
+                    </div>
+                  </>
+                ) : (
                   <Link
-                    to="/profile"
-                    className="flex items-center text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium w-full"
+                    to="/login"
+                    className="flex items-center justify-center bg-black text-white rounded-md px-3 py-2 text-base font-medium w-full"
+                    onClick={toggleSidebar}
                   >
-                    <User size={18} className="mr-3" />
-                    Profile
+                    <LogIn size={18} className="mr-3" />
+                    Login
                   </Link>
-                  <Link
-                    to="/wishlist"
-                    className="flex items-center text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium w-full"
-                  >
-                    <Heart size={18} className="mr-3" />
-                    Wishlist
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="flex items-center text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium w-full"
-                  >
-                    <Settings size={18} className="mr-3" />
-                    Settings
-                  </Link>
-                  <Link
-                    to="/logout"
-                    className="flex items-center text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium w-full"
-                  >
-                    <LogOut size={18} className="mr-3" />
-                    Sign out
-                  </Link>
-                </div>
+                )}
               </div>
             </div>
           </div>

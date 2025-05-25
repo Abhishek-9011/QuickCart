@@ -3,47 +3,47 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 export const signup = async (req, res) => {
-  try {
-    const { name, email, password, phoneNumber, address, isAdmin } = req.body;
+try {
+  const { name, email, password, phoneNumber, address, isAdmin } = req.body;
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: "User with this email already exists",
-      });
-    }
-
-    const newUser = await User.create({
-      name,
-      email,
-      password,
-      phoneNumber,
-      address,
-      isAdmin,
-    });
-
-    const token = jwt.sign(
-      { id: newUser._id, role: newUser.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-
-    return res.status(201).json({
-      success: true,
-      message: "Account created successfully",
-      data: {
-        user: newUser,
-        token,
-      },
-    });
-  } catch (error) {
-    return res.status(500).json({
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.status(400).json({
       success: false,
-      message: "Failed to create account",
-      error: error.message,
+      message: "User with this email already exists",
     });
   }
+
+  const newUser = await User.create({
+    name,
+    email,
+    password,
+    phoneNumber,
+    address,
+    isAdmin,
+  });
+
+  const token = jwt.sign(
+    { id: newUser._id, role: newUser.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+
+  return res.status(201).json({
+    success: true,
+    message: "Account created successfully",
+    data: {
+      user: newUser,
+      token,
+    },
+  });
+} catch (error) {
+  return res.status(500).json({
+    success: false,
+    message: "Failed to create account",
+    error: error.message,
+  });
+}
 };
 
 export const signin = async (req, res) => {

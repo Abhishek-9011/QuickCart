@@ -1,18 +1,19 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import databaseConnect from './config/database.js';
-
+import databaseConnect from './config/databaseConnect.js';
+import cors from 'cors';
 // Routes
-import userRouter from './routes/userRoutes.js';
-import productRouter from './routes/productRoutes.js';
-import orderRouter from './routes/orderRoutes.js';
-import cartRouter from './routes/cartRoutes.js';
-import categoryRouter from './routes/categoryRoutes.js';
-import reviewRouter from './routes/reviewRoutes.js';
+import userRouter from './routes/user.js';
+import productRouter from './routes/product.js';
+import orderRouter from './routes/order.js';
+import cartRouter from './routes/cart.js';
+import categoryRouter from './routes/category.js';
+import reviewRouter from './routes/review.js';
 
 dotenv.config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // Connect to database
@@ -34,5 +35,5 @@ app.get('/', (req, res) => {
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

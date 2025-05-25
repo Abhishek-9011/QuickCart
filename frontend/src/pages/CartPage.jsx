@@ -148,9 +148,9 @@ const CartPage = () => {
                 </div>
               </div>
 
-              <button className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition duration-200">
+              <Link to={"/checkout"} className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition duration-200">
                 Checkout
-              </button>
+              </Link>
 
               <div className="mt-4 text-center">
                 <button className="text-sm text-gray-600 hover:underline">

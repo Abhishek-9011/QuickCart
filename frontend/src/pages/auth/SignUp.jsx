@@ -7,37 +7,78 @@ import {
   Shield,
   Eye,
   EyeOff,
-} from 'lucide-react';
-import { useState } from 'react';
+} from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    phoneNumber: '',
-    address: '',
+    name: "",
+    email: "",
+    password: "",
+    phoneNumber: "",
+    address: "",
     isAdmin: false,
   });
 
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    // You can handle API call here
   };
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      console.log(formData);
+      
+      const response = await fetch(
+        `http://localhost:3000/user/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Signup successful:", data);
+      // Store token if provided
+        if (data?.data?.token) {
+          localStorage.setItem("token", data.data.token);
+        }
+
+        navigate(formData.isAdmin ? "/admin-dashboard" : "/user-profile");
+
+        // Optionally redirect or reset form
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          phoneNumber: "",
+          address: "",
+          isAdmin: false,
+        });
+      } else {
+        alert(data.message || "Signup failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      alert("Something went wrong. Please try again later.");
+    }
   };
 
   return (
@@ -48,7 +89,6 @@ const SignUp = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-purple-600 via-pink-500 to-blue-500 opacity-70" />
           <div className="absolute inset-0 bg-[url('/api/placeholder/1200/800')] bg-cover bg-center mix-blend-overlay" />
         </div>
-
         <div className="relative z-10 flex flex-col justify-between p-12 text-white h-full">
           <p className="uppercase text-xs tracking-wider">A WISE QUOTE</p>
           <div className="mb-16">
@@ -117,13 +157,16 @@ const SignUp = () => {
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium mb-1"
+              >
                 Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   id="password"
                   value={formData.password}
@@ -144,7 +187,10 @@ const SignUp = () => {
 
             {/* Phone */}
             <div>
-              <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="phoneNumber"
+                className="block text-sm font-medium mb-1"
+              >
                 Phone Number
               </label>
               <div className="relative">
@@ -163,7 +209,10 @@ const SignUp = () => {
 
             {/* Address */}
             <div>
-              <label htmlFor="address" className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="address"
+                className="block text-sm font-medium mb-1"
+              >
                 Address
               </label>
               <div className="relative">
@@ -190,12 +239,15 @@ const SignUp = () => {
                 onChange={handleChange}
                 className="h-4 w-4 border-gray-300 rounded"
               />
-              <label htmlFor="isAdmin" className="text-sm text-gray-700 flex items-center">
+              <label
+                htmlFor="isAdmin"
+                className="text-sm text-gray-700 flex items-center"
+              >
                 <Shield className="h-4 w-4 mr-1" /> Admin User
               </label>
             </div>
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition-all duration-200"

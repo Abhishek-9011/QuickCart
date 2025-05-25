@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Info
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Sample data from CartPage
 const sampleCartItems = [
@@ -508,9 +509,9 @@ const OrderConfirmation = ({ orderNumber }) => {
       </p>
       
       <div className="flex flex-col sm:flex-row justify-center gap-4">
-        <button className="bg-indigo-600 text-white font-medium py-2 px-6 rounded-md hover:bg-indigo-700 transition duration-200">
-          Track Order
-        </button>
+        <Link to={"/invoice"} className="bg-indigo-600 text-white font-medium py-2 px-6 rounded-md hover:bg-indigo-700 transition duration-200">
+          Generate Invoice
+        </Link>
         <button className="border border-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md hover:bg-gray-50 transition duration-200">
           Continue Shopping
         </button>
