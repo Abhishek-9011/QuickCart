@@ -14,34 +14,42 @@ import WishlistPage from "./pages/WishListPage";
 import InvoicePage from "./pages/InvoicePage";
 import SignIn from "./pages/auth/SignIn";
 import SignUp from "./pages/auth/SignUp";
-
+import ContactUs from "./pages/ContactUs";
+import AboutUs from "./pages/AboutUs";
+import Category from "./pages/Category";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         {/* Routes with Navbar and Footer */}
-        <Route path="/*" element={
-          <>
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/invoice" element={<InvoicePage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/wishlist" element={<WishlistPage />} />
-              <Route path="/user-profile" element={<Profile />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/admin-products" element={<AdminProduct />} />
-              <Route path="/admin-dashboard" element={<AdminDashboard />} />
-              <Route path="/admin-orders" element={<AdminOrders />} />
-            </Routes>
-            <Footer />
-          </>
-        } />
+        <Route
+          path="/*"
+          element={
+            <>
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/invoice" element={<InvoicePage />} />
+                <Route path="/category" element={<Category />} />
+                <Route path="/contact-us" element={<ContactUs />} />
+                <Route path="/about-us" element={<AboutUs />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/wishlist" element={<WishlistPage />} />
+                <Route path="/user-profile" element={<Profile />} />
+                <Route path="/products" element={<Products />} />
+              </Routes>
+              <Footer />
+            </>
+          }
+        />
 
         {/* Auth routes without Navbar and Footer */}
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/admin-products" element={<AdminProduct />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin-orders" element={<AdminOrders />} />
       </Routes>
     </BrowserRouter>
   );

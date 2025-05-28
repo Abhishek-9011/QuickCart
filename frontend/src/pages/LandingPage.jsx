@@ -14,6 +14,7 @@ import {
   Facebook,
   Linkedin,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 // Animation helper component
 const FadeIn = ({ children, delay = 0 }) => {
@@ -448,7 +449,8 @@ export default function LandingPage() {
               href="#"
               className="flex items-center text-gray-600 hover:text-black"
             >
-              View All
+              <Link to={"/category"}>View All</Link>
+              
               <ChevronRight size={16} />
             </a>
           </div>
@@ -463,7 +465,8 @@ export default function LandingPage() {
               href="#"
               className="flex items-center text-gray-600 hover:text-black"
             >
-              View All
+              <Link to={"/products"}>View All</Link>
+              
               <ChevronRight size={16} />
             </a>
           </div>
@@ -506,7 +509,7 @@ export default function LandingPage() {
               href="#"
               className="flex items-center text-gray-600 hover:text-black"
             >
-              View All
+               <Link to={"/products"}>View All</Link>
               <ChevronRight size={16} />
             </a>
           </div>

@@ -3,12 +3,12 @@ import dotenv from 'dotenv';
 import databaseConnect from './config/databaseConnect.js';
 import cors from 'cors';
 // Routes
-import userRouter from './routes/user.js';
-import productRouter from './routes/product.js';
-import orderRouter from './routes/order.js';
-import cartRouter from './routes/cart.js';
-import categoryRouter from './routes/category.js';
-import reviewRouter from './routes/review.js';
+import userRouter from './routes/user.route.js';
+import productRouter from './routes/product.route.js';
+import orderRouter from './routes/order.route.js';
+import cartRouter from './routes/cart.route.js';
+import categoryRouter from './routes/category.route.js';
+import reviewRouter from './routes/review.route.js';
 
 dotenv.config();
 

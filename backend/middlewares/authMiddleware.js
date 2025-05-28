@@ -9,11 +9,11 @@ const userMiddleware = (req, res, next) => {
       return res.status(401).json({ error: "Access denied. No token provided." });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_USER_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log("Decoded token:", decoded);
 
-    // Assuming the JWT payload contains the user's ID as 'id'
-    req.user = { id: decoded.id }; // Ensure this matches the structure of your JWT
+    // Make sure this matches your JWT payload structure
+    req.user = { userId: decoded.id }; // Changed to userId to match your controller
 
     next();
   } catch (error) {
@@ -22,4 +22,5 @@ const userMiddleware = (req, res, next) => {
   }
 };
 
-export default userMiddleware;
+// Use named export instead of default export
+export default userMiddleware ;

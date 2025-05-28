@@ -3,7 +3,7 @@ import Category from '../models/Category.model.js';
 // Create category
 export const createCategory = async (req, res) => {
   try {
-    const { name, slug, parentCategoryId } = req.body;
+    const { name } = req.body;
 
     const existing = await Category.findOne({ slug });
     if (existing) return res.status(400).json({ message: 'Slug must be unique' });

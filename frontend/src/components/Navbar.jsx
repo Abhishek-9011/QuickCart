@@ -24,7 +24,7 @@ function Navbar() {
 
   // Check for token in localStorage on component mount
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
@@ -41,10 +41,10 @@ function Navbar() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem("token");
     setIsLoggedIn(false);
     setProfileDropdownOpen(false);
-    navigate('/');
+    navigate("/");
   };
 
   // Focus the search input when the search bar opens
@@ -118,19 +118,19 @@ function Navbar() {
                   Products
                 </Link>
                 <Link
-                  to="/categories"
+                  to="/category"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   Categories
                 </Link>
                 <Link
-                  to="/about"
+                  to="/about-us"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   About Us
                 </Link>
                 <Link
-                  to="/contact"
+                  to="/contact-us"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   Contact Us
@@ -171,9 +171,12 @@ function Navbar() {
                       3
                     </span>
                   </Link>
-                  
+
                   {/* Profile Dropdown - Only when logged in */}
-                  <div className="relative hidden sm:block" ref={profileDropdownRef}>
+                  <div
+                    className="relative hidden sm:block"
+                    ref={profileDropdownRef}
+                  >
                     <div
                       className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-all duration-200 flex items-center cursor-pointer"
                       onClick={toggleProfileDropdown}
@@ -196,7 +199,7 @@ function Navbar() {
                           </div>
 
                           <Link
-                            to="/profile"
+                            to="/user-profile"
                             className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             onClick={() => setProfileDropdownOpen(false)}
                           >
@@ -225,7 +228,7 @@ function Navbar() {
                 </>
               ) : (
                 /* Show login button when not logged in */
-                <Link 
+                <Link
                   to="/signin"
                   className="bg-black text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-800 transition-colors duration-200 hidden sm:flex items-center"
                 >
@@ -258,7 +261,7 @@ function Navbar() {
               <input
                 ref={searchInputRef}
                 type="text"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-black sm:text-sm"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500   sm:text-sm"
                 placeholder="Search for products..."
               />
             </div>
@@ -301,7 +304,7 @@ function Navbar() {
                 </div>
                 <input
                   type="text"
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-black sm:text-sm"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2  sm:text-sm"
                   placeholder="Search for products..."
                 />
               </div>
@@ -333,7 +336,7 @@ function Navbar() {
                 <ChevronRight size={18} />
               </Link>
               <Link
-                to="/about"
+                to="/about-us"
                 className="flex items-center justify-between text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium"
                 onClick={toggleSidebar}
               >
@@ -341,7 +344,7 @@ function Navbar() {
                 <ChevronRight size={18} />
               </Link>
               <Link
-                to="/contact"
+                to="/contact-us"
                 className="flex items-center justify-between text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium"
                 onClick={toggleSidebar}
               >
