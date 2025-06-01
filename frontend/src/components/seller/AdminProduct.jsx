@@ -24,13 +24,11 @@ const AdminProduct = () => {
   const [showModal, setShowModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [newProduct, setNewProduct] = useState({
     name: "",
     brand: "",
-    category: "",
     price: "",
     stock: "",
     image: "",
@@ -53,7 +51,6 @@ const AdminProduct = () => {
           id: product._id,
           name: product.title,
           brand: product.brand,
-          category: product.categoryId?.name || "Uncategorized",
           price: product.price,
           stock: product.stock,
           status: product.stock > 0 ? "In Stock" : "Out of Stock",
@@ -91,12 +88,6 @@ const AdminProduct = () => {
     }, 300);
   };
 
-  // Extract unique categories for filter
-  const categories = [
-    "All",
-    ...new Set(products.map((product) => product.category)),
-  ];
-
   // Sort products
   const sortedProducts = [...products].sort((a, b) => {
     if (sortConfig.key) {
@@ -110,14 +101,12 @@ const AdminProduct = () => {
     return 0;
   });
 
-  // Filter products based on search and category
+  // Filter products based on search
   const filteredProducts = sortedProducts.filter((product) => {
-    const matchesSearch =
+    return (
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.brand.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "All" || product.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+      product.brand.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   });
 
   // Pagination
@@ -160,7 +149,6 @@ const AdminProduct = () => {
         price: parseFloat(newProduct.price),
         discountPrice: parseFloat(newProduct.discountPrice) || undefined,
         images: newProduct.image ? [newProduct.image] : [],
-        categoryId: newProduct.category || undefined,
         brand: newProduct.brand,
         stock: parseInt(newProduct.stock),
         rating: parseFloat(newProduct.rating) || 0,
@@ -175,7 +163,6 @@ const AdminProduct = () => {
           id: savedProduct._id,
           name: savedProduct.title,
           brand: savedProduct.brand,
-          category: savedProduct.categoryId?.name || "Uncategorized",
           price: savedProduct.price,
           stock: savedProduct.stock,
           status: savedProduct.stock > 0 ? "In Stock" : "Out of Stock",
@@ -207,7 +194,6 @@ const AdminProduct = () => {
         price: parseFloat(newProduct.price),
         discountPrice: parseFloat(newProduct.discountPrice) || undefined,
         images: newProduct.image ? [newProduct.image] : [],
-        categoryId: newProduct.category || undefined,
         brand: newProduct.brand,
         stock: parseInt(newProduct.stock),
         rating: parseFloat(newProduct.rating) || 0,
@@ -226,7 +212,6 @@ const AdminProduct = () => {
                 ...product,
                 name: updatedProduct.title,
                 brand: updatedProduct.brand,
-                category: updatedProduct.categoryId?.name || product.category,
                 price: updatedProduct.price,
                 stock: updatedProduct.stock,
                 status: updatedProduct.stock > 0 ? "In Stock" : "Out of Stock",
@@ -251,7 +236,6 @@ const AdminProduct = () => {
     setNewProduct({
       name: "",
       brand: "",
-      category: "",
       price: "",
       stock: "",
       image: "",
@@ -268,7 +252,6 @@ const AdminProduct = () => {
     setNewProduct({
       name: product.name,
       brand: product.brand,
-      category: product.category,
       price: product.price.toString(),
       stock: product.stock.toString(),
       image: product.image,
@@ -344,45 +327,6 @@ const AdminProduct = () => {
             </div>
 
             <div className="flex gap-3 w-full md:w-auto">
-              <div className="relative">
-                <button
-                  onClick={() => setIsFilterOpen(!isFilterOpen)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
-                >
-                  <Filter size={16} />
-                  <span>Filters</span>
-                  {isFilterOpen ? (
-                    <ChevronUp size={16} />
-                  ) : (
-                    <ChevronDown size={16} />
-                  )}
-                </button>
-
-                {isFilterOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-10 border border-gray-200 animate-fade-in-up">
-                    <div className="p-3">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Category
-                      </label>
-                      <select
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                        value={selectedCategory}
-                        onChange={(e) => {
-                          setSelectedCategory(e.target.value);
-                          setCurrentPage(1);
-                        }}
-                      >
-                        {categories.map((category) => (
-                          <option key={category} value={category}>
-                            {category}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                )}
-              </div>
-
               <button
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2 shadow-md hover:shadow-lg active:scale-95 transform transition-transform duration-150"
                 onClick={() => {
@@ -449,9 +393,6 @@ const AdminProduct = () => {
                             {getSortIndicator("brand")}
                           </div>
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Category
-                        </th>
                         <th
                           className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                           onClick={() => requestSort("price")}
@@ -502,11 +443,6 @@ const AdminProduct = () => {
                             <div className="text-sm text-gray-500">
                               {product.brand}
                             </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                              {product.category}
-                            </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-gray-900 font-medium">
@@ -763,40 +699,21 @@ const AdminProduct = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Brand <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                        value={newProduct.brand}
-                        onChange={(e) =>
-                          setNewProduct({
-                            ...newProduct,
-                            brand: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Category
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                        value={newProduct.category}
-                        onChange={(e) =>
-                          setNewProduct({
-                            ...newProduct,
-                            category: e.target.value,
-                          })
-                        }
-                        placeholder="e.g. Smartphones"
-                      />
-                    </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Brand <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      value={newProduct.brand}
+                      onChange={(e) =>
+                        setNewProduct({
+                          ...newProduct,
+                          brand: e.target.value,
+                        })
+                      }
+                    />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 mb-4">

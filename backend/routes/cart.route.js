@@ -9,7 +9,7 @@ import {
 } from '../controllers/cart.controller.js';
 
 // POST /api/cart - Add item or create cart
-router.post('/', addToCart);
+router.post('/add', addToCart);
 
 // GET /api/cart/:userId - Get user's cart
 router.get('/:userId', getCartByUserId);

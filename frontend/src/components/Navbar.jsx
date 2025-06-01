@@ -117,12 +117,12 @@ function Navbar() {
                 >
                   Products
                 </Link>
-                <Link
+                {/* <Link
                   to="/category"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
                 >
                   Categories
-                </Link>
+                </Link> */}
                 <Link
                   to="/about-us"
                   className="text-gray-700 hover:text-black hover:border-b-2 hover:border-black px-2 py-1 text-sm font-medium transition-all duration-200"
@@ -327,14 +327,14 @@ function Navbar() {
                 Products
                 <ChevronRight size={18} />
               </Link>
-              <Link
+              {/* <Link
                 to="/categories"
                 className="flex items-center justify-between text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium"
                 onClick={toggleSidebar}
               >
                 Categories
                 <ChevronRight size={18} />
-              </Link>
+              </Link> */}
               <Link
                 to="/about-us"
                 className="flex items-center justify-between text-gray-700 hover:bg-gray-100 rounded-md px-3 py-2 text-base font-medium"

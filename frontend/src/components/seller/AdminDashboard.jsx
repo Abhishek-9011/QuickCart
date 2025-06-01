@@ -37,78 +37,89 @@ ChartJS.register(
 );
 
 function AdminDashboard() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <Sidebar />
+    <div className="flex flex-col md:flex-row h-screen bg-gray-50">
+      {/* Sidebar - will be hidden on mobile by default */}
+      {!isMobile && <Sidebar />}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Dashboard Content */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <div className="max-w-7xl mx-auto">
             {/* Welcome Section */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Welcome back, Admin</h2>
-              <p className="text-gray-600">Here's what's happening with your store today</p>
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1 md:mb-2">Welcome back, Admin</h2>
+              <p className="text-sm md:text-base text-gray-600">Here's what's happening with your store today</p>
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
               <SaleReport
                 description="Total Sales"
                 amount="34,456.00"
                 percent={14}
-                icon={<DollarSign size={22} />}
+                icon={<DollarSign size={20} className="md:size-[22px]" />}
                 color="indigo"
               />
               <SaleReport
                 description="Total Orders"
                 amount={3456}
                 percent={17}
-                icon={<ShoppingCart size={22} />}
+                icon={<ShoppingCart size={20} className="md:size-[22px]" />}
                 color="blue"
               />
               <SaleReport
                 description="Total Revenue"
                 amount="1,456.00"
                 percent={14}
-                icon={<TrendingUp size={22} />}
+                icon={<TrendingUp size={20} className="md:size-[22px]" />}
                 color="emerald"
               />
               <SaleReport
                 description="Total Customers"
                 amount="42"
                 percent={-11}
-                icon={<Users size={22} />}
+                icon={<Users size={20} className="md:size-[22px]" />}
                 color="rose"
               />
             </div>
 
             {/* Charts Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-7 gap-1 mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-7 gap-4 md:gap-6 mb-6 md:mb-8">
               {/* Main Graph */}
-              <div className="lg:col-span-4 bg-white rounded-xl shadow-sm p-5 border border-gray-100">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-lg font-semibold text-gray-800">Revenue Overview</h3>
-                  <select className="bg-gray-50 border border-gray-200 text-gray-700 py-1 px-3 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <div className="lg:col-span-4 bg-white rounded-lg md:rounded-xl shadow-sm p-4 md:p-5 border border-gray-100">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-2">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-800">Revenue Overview</h3>
+                  <select className="w-full sm:w-auto bg-gray-50 border border-gray-200 text-gray-700 py-1 px-3 rounded-md text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option>This Month</option>
                     <option>Last Month</option>
                     <option>Last 3 Months</option>
                   </select>
                 </div>
-                <div className="h-64">
+                <div className="h-48 sm:h-56 md:h-64">
                   <Graph />
                 </div>
               </div>
 
               {/* Sales Location */}
-              <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-5 border border-gray-100">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-lg font-semibold text-gray-800">Sales By Location</h3>
-                  <MoreHorizontal size={18} className="text-gray-400 cursor-pointer hover:text-gray-600" />
+              <div className="lg:col-span-2 bg-white rounded-lg md:rounded-xl shadow-sm p-4 md:p-5 border border-gray-100">
+                <div className="flex justify-between items-center mb-4 md:mb-6">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-800">Sales By Location</h3>
+                  <MoreHorizontal size={16} className="text-gray-400 cursor-pointer hover:text-gray-600 md:size-[18px]" />
                 </div>
-                <div className="space-y-5">
+                <div className="space-y-3 md:space-y-5">
                   {[
                     { city: "New York", orders: 187, color: "bg-indigo-500" },
                     { city: "Los Angeles", orders: 154, color: "bg-blue-500" },
@@ -126,20 +137,20 @@ function AdminDashboard() {
               </div>
 
               {/* Pie Chart */}
-              <div className="lg:col-span-1 bg-white rounded-xl shadow-sm p-5 border border-gray-100">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-gray-800 text-center">Sales Channels</h3>
+              <div className="lg:col-span-1 bg-white rounded-lg md:rounded-xl shadow-sm p-4 md:p-5 border border-gray-100">
+                <div className="mb-3 md:mb-4">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-800 text-center">Sales Channels</h3>
                 </div>
-                <div className="h-48">
+                <div className="h-40 sm:h-48">
                   <PieChart />
                 </div>
               </div>
             </div>
 
             {/* Bottom Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
               {/* Products Table */}
-              <div className="lg:col-span-3 bg-white rounded-xl shadow-sm border border-gray-100">
+              <div className="lg:col-span-3 bg-white rounded-lg md:rounded-xl shadow-sm border border-gray-100">
                 <TopSellingProducts />
               </div>
 
@@ -221,19 +232,19 @@ const MonthlyTarget = () => {
   }, [percentage]);
 
   return (
-    <div className="p-5 bg-white shadow-sm rounded-xl border border-gray-100 h-full">
+    <div className="p-4 md:p-5 bg-white shadow-sm rounded-lg md:rounded-xl border border-gray-100 h-full">
       {/* Header */}
-      <div className="flex justify-between items-center mb-5">
-        <h4 className="text-lg font-semibold text-gray-800">Monthly Target</h4>
-        <MoreHorizontal size={18} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+      <div className="flex justify-between items-center mb-4 md:mb-5">
+        <h4 className="text-base md:text-lg font-semibold text-gray-800">Monthly Target</h4>
+        <MoreHorizontal size={16} className="cursor-pointer text-gray-400 hover:text-gray-600 md:size-[18px]" />
       </div>
 
       {/* Progress Chart using Chart.js */}
-      <div className="flex justify-center items-center mb-5 relative">
-        <div className="w-36 h-36 relative">
+      <div className="flex justify-center items-center mb-4 md:mb-5 relative">
+        <div className="w-28 h-28 md:w-36 md:h-36 relative">
           <canvas ref={chartRef} width="144" height="144"></canvas>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="text-xl font-bold text-gray-800">{percentage.toFixed(2)}%</div>
+            <div className="text-lg md:text-xl font-bold text-gray-800">{percentage.toFixed(2)}%</div>
             <div className="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded-md mt-1 font-medium">
               +12%
             </div>
@@ -242,25 +253,25 @@ const MonthlyTarget = () => {
       </div>
 
       {/* Earnings Text */}
-      <p className="text-center text-gray-600 mb-6 px-2">
+      <p className="text-center text-sm md:text-base text-gray-600 mb-4 md:mb-6 px-1 md:px-2">
         You earned <span className="font-semibold text-gray-800">{formatCurrency(todayEarnings)}</span> today.
         <span className="block mt-1">It's higher than last month. Keep up your good work!</span>
       </p>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-2 border-t border-gray-100 pt-4">
+      <div className="grid grid-cols-3 gap-2 border-t border-gray-100 pt-3 md:pt-4">
         <div className="flex flex-col items-center">
-          <span className="font-bold text-gray-800">{formatCurrency(target)}</span>
+          <span className="text-sm md:text-base font-bold text-gray-800">{formatCurrency(target)}</span>
           <span className="text-red-500 text-xs font-medium">↓ 8.3%</span>
           <span className="text-gray-500 text-xs mt-1">Target</span>
         </div>
         <div className="flex flex-col items-center">
-          <span className="font-bold text-gray-800">{formatCurrency(revenue)}</span>
+          <span className="text-sm md:text-base font-bold text-gray-800">{formatCurrency(revenue)}</span>
           <span className="text-green-500 text-xs font-medium">↑ 11.2%</span>
           <span className="text-gray-500 text-xs mt-1">Revenue</span>
         </div>
         <div className="flex flex-col items-center">
-          <span className="font-bold text-gray-800">{formatCurrency(today)}</span>
+          <span className="text-sm md:text-base font-bold text-gray-800">{formatCurrency(today)}</span>
           <span className="text-green-500 text-xs font-medium">↑ 9.7%</span>
           <span className="text-gray-500 text-xs mt-1">Today</span>
         </div>
@@ -268,6 +279,7 @@ const MonthlyTarget = () => {
     </div>
   );
 };
+
 const TopSellingProducts = () => {
   const products = [
     {
@@ -318,16 +330,16 @@ const TopSellingProducts = () => {
   ];
 
   return (
-    <div className="p-5">
-      <div className="flex justify-between items-center mb-6">
-        <h4 className="text-lg font-semibold text-gray-800">
+    <div className="p-4 md:p-5">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-3">
+        <h4 className="text-base md:text-lg font-semibold text-gray-800">
           Top Selling Products
         </h4>
-        <div className="flex gap-3">
-          <button className="px-3 py-1.5 flex items-center gap-2 text-sm bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 text-gray-700 transition-colors">
-            <Filter size={14} /> Filter
+        <div className="flex gap-2 md:gap-3 w-full sm:w-auto">
+          <button className="px-2 py-1 md:px-3 md:py-1.5 flex items-center gap-1 text-xs md:text-sm bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 text-gray-700 transition-colors w-full sm:w-auto justify-center">
+            <Filter size={12} className="md:size-[14px]" /> Filter
           </button>
-          <button className="px-3 py-1.5 text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg border border-indigo-100 transition-colors">
+          <button className="px-2 py-1 md:px-3 md:py-1.5 text-xs md:text-sm bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg border border-indigo-100 transition-colors w-full sm:w-auto">
             See All
           </button>
         </div>
@@ -337,15 +349,15 @@ const TopSellingProducts = () => {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-gray-200">
-              <th className="py-4 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="py-3 px-2 md:py-4 md:px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 <input type="checkbox" className="rounded text-indigo-600 focus:ring-indigo-500" />
               </th>
-              <th className="py-4 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-              <th className="py-4 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-              <th className="py-4 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-              <th className="py-4 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-              <th className="py-4 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-              <th className="py-4 px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+              <th className="py-3 px-2 md:py-4 md:px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+              <th className="py-3 px-2 md:py-4 md:px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+              <th className="py-3 px-2 md:py-4 md:px-3 text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Category</th>
+              <th className="py-3 px-2 md:py-4 md:px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
+              <th className="py-3 px-2 md:py-4 md:px-3 text-xs font-medium text-gray-500 uppercase tracking-wider hidden xs:table-cell">Amount</th>
+              <th className="py-3 px-2 md:py-4 md:px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -354,32 +366,32 @@ const TopSellingProducts = () => {
                 key={product.id}
                 className="hover:bg-gray-50 transition-colors"
               >
-                <td className="py-3 px-3">
+                <td className="py-2 px-2 md:py-3 md:px-3">
                   <input type="checkbox" className="rounded text-indigo-600 focus:ring-indigo-500" />
                 </td>
-                <td className="py-3 px-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                <td className="py-2 px-2 md:py-3 md:px-3">
+                  <div className="flex items-center gap-2 md:gap-3">
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gray-100 flex items-center justify-center">
                       <img
                         src={product.image}
                         alt={product.name}
-                        className="w-8 h-8 object-contain"
+                        className="w-6 h-6 md:w-8 md:h-8 object-contain"
                       />
                     </div>
-                    <span className="font-medium text-gray-800">{product.name}</span>
+                    <span className="font-medium text-gray-800 text-sm md:text-base">{product.name}</span>
                   </div>
                 </td>
-                <td className="py-3 px-3 font-medium text-gray-700">${product.price.toFixed(2)}</td>
-                <td className="py-3 px-3 text-gray-600">{product.category}</td>
-                <td className="py-3 px-3">
-                  <span className="px-2 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-medium">
+                <td className="py-2 px-2 md:py-3 md:px-3 font-medium text-gray-700 text-sm md:text-base">${product.price.toFixed(2)}</td>
+                <td className="py-2 px-2 md:py-3 md:px-3 text-gray-600 text-sm hidden sm:table-cell">{product.category}</td>
+                <td className="py-2 px-2 md:py-3 md:px-3">
+                  <span className="px-1.5 py-0.5 md:px-2 md:py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-medium">
                     {product.quantity}
                   </span>
                 </td>
-                <td className="py-3 px-3 font-medium text-gray-700">${product.amount.toLocaleString()}</td>
-                <td className="py-3 px-3">
-                  <button className="p-1 hover:bg-gray-100 rounded-full">
-                    <MoreHorizontal size={18} className="text-gray-500" />
+                <td className="py-2 px-2 md:py-3 md:px-3 font-medium text-gray-700 text-sm hidden xs:table-cell">${product.amount.toLocaleString()}</td>
+                <td className="py-2 px-2 md:py-3 md:px-3">
+                  <button className="p-0.5 md:p-1 hover:bg-gray-100 rounded-full">
+                    <MoreHorizontal size={16} className="text-gray-500 md:size-[18px]" />
                   </button>
                 </td>
               </tr>
@@ -429,12 +441,12 @@ const PieChart = () => {
       <div className="flex-1 flex items-center justify-center">
         <Pie data={data} options={options} />
       </div>
-      <div className="mt-2 space-y-1.5">
+      <div className="mt-1 md:mt-2 space-y-1 md:space-y-1.5">
         {data.labels.map((label, index) => (
           <div key={index} className="flex justify-between text-xs px-1">
             <div className="flex items-center">
               <span
-                className="w-2 h-2 rounded-full mr-2"
+                className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full mr-1 md:mr-2"
                 style={{
                   backgroundColor: data.datasets[0].backgroundColor[index],
                 }}
@@ -555,11 +567,11 @@ function OrderLocation({ location, orders, color }) {
 
   return (
     <div>
-      <div className="flex justify-between mb-1.5">
-        <div className="text-gray-700 font-medium">{location}</div>
-        <div className="text-gray-900 font-semibold">{orders.toLocaleString()}</div>
+      <div className="flex justify-between mb-1 md:mb-1.5">
+        <div className="text-gray-700 font-medium text-sm md:text-base">{location}</div>
+        <div className="text-gray-900 font-semibold text-sm md:text-base">{orders.toLocaleString()}</div>
       </div>
-      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-1 md:h-1.5 bg-gray-100 rounded-full overflow-hidden">
         <div
           className={`h-full ${color} transition-all duration-500 rounded-full`}
           style={{ width: `${percentage}%` }}
@@ -583,21 +595,21 @@ const SaleReport = ({ description, amount, percent, icon, color }) => {
   const iconColorClass = colorMap[color] || "bg-indigo-50 text-indigo-600";
   
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
+    <div className="bg-white p-4 md:p-6 rounded-lg md:rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
       <div className="flex justify-between items-start">
-        <div className="space-y-3">
-          <div className="text-gray-500 font-medium">{description}</div>
-          <div className="text-2xl font-bold text-gray-900">${amountFormatted}</div>
+        <div className="space-y-2 md:space-y-3">
+          <div className="text-gray-500 font-medium text-sm md:text-base">{description}</div>
+          <div className="text-xl md:text-2xl font-bold text-gray-900">${amountFormatted}</div>
           <div
-            className={`flex items-center gap-1 text-sm font-medium ${
+            className={`flex items-center gap-1 text-xs md:text-sm font-medium ${
               isPositive ? "text-emerald-600" : "text-rose-600"
             }`}
           >
-            {isPositive ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+            {isPositive ? <ArrowUp size={12} className="md:size-[14px]" /> : <ArrowDown size={12} className="md:size-[14px]" />}
             <span>{Math.abs(percent)}% vs last month</span>
           </div>
         </div>
-        <div className={`p-3 rounded-lg ${iconColorClass}`}>
+        <div className={`p-2 md:p-3 rounded-lg ${iconColorClass}`}>
           {icon}
         </div>
       </div>

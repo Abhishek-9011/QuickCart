@@ -9,10 +9,7 @@ const connectDatabase = async () => {
       throw new Error("MongoDB connection URL is missing in .env file");
     }
 
-    await mongoose.connect(process.env.MONGO_DB_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_DB_URL);
 
     console.log("✅ MongoDB connected successfully");
   } catch (error) {
